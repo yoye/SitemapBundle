@@ -8,8 +8,6 @@
         <parameter key="opensky.sitemap.response.filter.class">OpenSky\Bundle\SitemapBundle\Listener\ResponseFilter</parameter>
         <parameter key="opensky.sitemap.url.class">OpenSky\Bundle\SitemapBundle\Document\Url</parameter>
         <parameter key="opensky.sitemap_exporter.class">OpenSky\Bundle\SitemapBundle\Sitemap\SitemapExporter</parameter>
-        <parameter key="opensky.sitemap.dumper.class">OpenSky\Bundle\SitemapBundle\Dumper\Doctrine\ODM\MongoDB</parameter>
-        <parameter key="opensky.sitemap.sitemap.storage.class">OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB</parameter>
         <parameter key="opensky.sitemap.class">OpenSky\Bundle\SitemapBundle\Sitemap\Sitemap</parameter>
         <parameter key="opensky.sitemap.listener.class">OpenSky\Bundle\SitemapBundle\Listener\SitemapListener</parameter>
         <parameter key="opensky.sitemap.template.engine">twig</parameter>
@@ -25,15 +23,6 @@
             <call method="setUrlClass">
                 <argument>%opensky.sitemap.url.class%</argument>
             </call>
-        </service>
-        <service id="opensky.sitemap.dumper" class="%opensky.sitemap.dumper.class%" />
-        <service id="opensky.sitemap.sitemap.storage" class="%opensky.sitemap.sitemap.storage.class%">
-            <argument type="service" id="doctrine.odm.mongodb.document_manager" />
-            <argument type="service">
-                <service factory-service="doctrine.odm.mongodb.document_manager" factory-method="getRepository" class="Doctrine\ODM\MongoDB\DocumentRepository">
-                    <argument>%opensky.sitemap.url.class%</argument>
-                </service>
-            </argument>
         </service>
         <service id="opensky.sitemap.listener" class="%opensky.sitemap.listener.class%">
             <tag name="kernel.listener" event="opensky.sitemap.update" method="update" />

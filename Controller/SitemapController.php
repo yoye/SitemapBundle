@@ -23,8 +23,8 @@ class SitemapController extends Controller
     public function siteindexAction()
     {
         return $this->generateResponse('siteindex', array(
-            'totalPages' => $this->getTotalPages(),
-            'router'     => $this->getRouter(),
+                'max' => max(1, $this->getTotalPages()),
+                'router' => $this->getRouter(),
         ));
     }
 
@@ -35,21 +35,19 @@ class SitemapController extends Controller
     {
         $page = $this->getPage($this->get('request')->query);
         return $this->generateResponse('sitemap', array(
-            'urls' => $this->getUrls($page),
-            'page' => $page,
+                'urls' => $this->getUrls($page),
+                'page' => $page,
         ));
     }
 
     protected function generateResponse($view, array $args)
     {
         $template = sprintf(
-            'OpenSkySitemapBundle:Sitemap:%s.xml.%s',
-            $view,
-            $this->container->getParameter('opensky.sitemap.template.engine')
+            'OpenSkySitemapBundle:Sitemap:%s.xml.%s', $view, $this->container->getParameter('opensky.sitemap.template.engine')
         );
 
         return $this->getTemplating()->renderResponse($template, $args, new Response('', 200, array(
-            'Content-Type' => 'application/xml',
+                'Content-Type' => 'application/xml',
         )));
     }
 

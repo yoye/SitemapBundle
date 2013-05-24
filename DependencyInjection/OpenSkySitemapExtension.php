@@ -30,19 +30,23 @@ class OpenSkySitemapExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('sitemap.xml');
 
         $defaults = $container->getParameter('opensky.sitemap.defaults');
-        foreach ($configs as $config) {
-            foreach (array('changefreq', 'priority', 'lastmod') as $prop) {
-                if (isset($config['default_' . $prop])) {
-                    $defaults[$prop] = $config['default_' . $prop];
-                }
-            }
+
+        foreach (array('changefreq', 'priority', 'lastmod') as $prop) {
+            $defaults[$prop] = $config['default_' . $prop];
         }
 
+        $loader->load(sprintf('%s.xml', $config['db_driver']));
+        
         $container->setParameter('opensky.sitemap.defaults', $defaults);
+        $container->setParameter('opensky.sitemap.db_driver', $config['db_driver']);
+        $container->setParameter('opensky.sitemap.url.class', $config['url_class']);
     }
 
     /**
@@ -53,4 +57,5 @@ class OpenSkySitemapExtension extends Extension
     {
         return 'opensky_sitemap';
     }
+
 }

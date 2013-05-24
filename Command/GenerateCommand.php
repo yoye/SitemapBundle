@@ -24,7 +24,9 @@ class GenerateCommand extends ContainerAwareCommand
     {
         $this
             ->setName('sitemap:generate')
-            ->setDescription('Generate sitemap, using its data providers.');
+            ->setDescription('Generate sitemap, using its data providers.')
+            ->addOption('ping', 'p', InputOption::VALUE_NONE, 'Send a ping notification to Google and Bing')
+        ;
     }
 
     /**
@@ -37,6 +39,18 @@ class GenerateCommand extends ContainerAwareCommand
             $this->getContainer()->get($id)->populate($sitemap);
         }
         $this->getSitemapDumper()->dump($sitemap);
+
+        if ($input->getOption('ping')) {
+            $url = $this->getContainer()->get('router')->generate('siteindex', array(), true);
+            
+            if (false !== @file_get_contents(sprintf('http://www.google.com/webmasters/sitemaps/ping?sitemap=%s', $url))) {
+                $output->writeln('<comment>Ping Google Successfully!</comment>');
+            }
+
+            if (false !== @file_get_contents(sprintf('http://www.bing.com/webmaster/ping.aspx?siteMap=%s', $url))) {
+                $output->writeln('<comment>Ping Bing Successfully!</comment>');
+            }
+        }
     }
 
     /**
@@ -62,4 +76,5 @@ class GenerateCommand extends ContainerAwareCommand
     {
         return $this->getContainer()->getParameter('opensky.sitemap.providers');
     }
+
 }
