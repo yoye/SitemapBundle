@@ -63,4 +63,9 @@ class ORMStorage implements Storage
         return ((int) $page - 1) * self::PAGE_LIMIT;
     }
 
+    public function remove(Url $url)
+    {
+        $this->em->remove($url);
+        $this->em->flush();
+    }
 }

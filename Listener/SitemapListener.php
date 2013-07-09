@@ -65,6 +65,13 @@ class SitemapListener
 
         $this->dump($this->sitemap);
     }
+    
+    public function remove(Event $event)
+    {
+        $this->sitemap->remove($event->get('loc'));
+        
+        $this->dump($this->sitemap);
+    }
 
     protected function getChangefreq(\DateInterval $interval)
     {

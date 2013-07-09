@@ -35,4 +35,9 @@ interface Storage
      * @param OpenSky\Bundle\SitemapBundle\Sitemap\Url
      */
     public function save(Url $url);
+    
+    /**
+     * @param \OpenSky\Bundle\SitemapBundle\Sitemap\Url $url
+     */
+    public function remove(Url $url);
 }

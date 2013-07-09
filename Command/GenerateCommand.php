@@ -34,6 +34,15 @@ class GenerateCommand extends ContainerAwareCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $connection = $em->getConnection();
+        $platform = $connection->getDatabasePlatform();
+        
+        $connection->executeUpdate($platform->getTruncateTableSQL('sitemap_url', true));
+        
+        $output->writeln('<info>Truncate table: </info><comment>sitemap_url</comment>');
+        
+        $output->writeln('<info>Start sitemap generation</info>');
         $sitemap = $this->getSitemap();
         foreach ($this->getProviders() as $id) {
             $this->getContainer()->get($id)->populate($sitemap);

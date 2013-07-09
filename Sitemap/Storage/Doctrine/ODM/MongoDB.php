@@ -102,4 +102,9 @@ class MongoDB implements Storage
     {
         return ((int) $page - 1) * self::PAGE_LIMIT;
     }
+    
+    public function remove(Url $url)
+    {
+        $this->dm->remove($url);
+    }
 }
